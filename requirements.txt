@@ -1,0 +1,6 @@
+fastapi
+pydantic
+supabase
+langchain_google_genai
+langchain
+python-dotenv
