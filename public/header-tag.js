@@ -40,7 +40,7 @@ function startNewChat() {
     welcomeMsg.style.border = `1px solid ${constants.BORDER_COLOR}`;
     welcomeMsg.innerHTML = `
       <div style="display: flex; align-items: center; gap: ${constants.MARGIN_SMALL}; margin-bottom: ${constants.MARGIN_SMALL};">
-        <div style="width: 32px; height: 32px; background: ${constants.PRIMARY_COLOR}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: ${constants.FONT_SIZE_MEDIUM};">👋</div>
+        <div style="width: 32px; height: 32px; background: ${constants.PRIMARY_COLOR}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: ${constants.FONT_SIZE_MEDIUM};">🦷</div>
         <div style="font-weight: 600; color: ${constants.PRIMARY_TEXT};">Hi there!</div>
       </div>
       <div style="color: ${constants.SECONDARY_TEXT}; line-height: 1.6;">${constants.WELCOME_MESSAGE}</div>
@@ -55,7 +55,7 @@ const constants = {
   HEADER_SUBTEXT: "Your dental care assistant",
   WELCOME_MESSAGE:
     "Hello! Welcome to BrightSmile Dental Clinic. I'm here to help you with appointment scheduling, dental care questions, and information about our services. How can I assist you today?",
-  INPUT_PLACEHOLDER: "Type your message here...",
+  INPUT_PLACEHOLDER: "Ask about appointments, treatments, or dental care...",
   SEND_BUTTON_TEXT: "Send",
   SEND_BUTTON_ICON: "💬",
 
@@ -65,36 +65,36 @@ const constants = {
   // Chatbot SVG Icon - Enhanced design
   CHATBOT_ICON: `<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 119.35"><title>chatbot</title><path d="M57.49,29.2V23.53a14.41,14.41,0,0,1-2-.93A12.18,12.18,0,0,1,50.44,7.5a12.39,12.39,0,0,1,2.64-3.95A12.21,12.21,0,0,1,57,.92,12,12,0,0,1,61.66,0,12.14,12.14,0,0,1,72.88,7.5a12.14,12.14,0,0,1,0,9.27,12.08,12.08,0,0,1-2.64,3.94l-.06.06a12.74,12.74,0,0,1-2.36,1.83,11.26,11.26,0,0,1-2,.93V29.2H94.3a15.47,15.47,0,0,1,15.42,15.43v2.29H115a7.93,7.93,0,0,1,7.9,7.91V73.2A7.93,7.93,0,0,1,115,81.11h-5.25v2.07A15.48,15.48,0,0,1,94.3,98.61H55.23L31.81,118.72a2.58,2.58,0,0,1-3.65-.29,2.63,2.63,0,0,1-.63-1.85l1.25-18h-.21A15.45,15.45,0,0,1,13.16,83.18V81.11H7.91A7.93,7.93,0,0,1,0,73.2V54.83a7.93,7.93,0,0,1,7.9-7.91h5.26v-2.3A15.45,15.45,0,0,1,28.57,29.2H57.49ZM82.74,47.32a9.36,9.36,0,1,1-9.36,9.36,9.36,9.36,0,0,1,9.36-9.36Zm-42.58,0a9.36,9.36,0,1,1-9.36,9.36,9.36,9.36,0,0,1,9.36-9.36Zm6.38,31.36a2.28,2.28,0,0,1-.38-.38,2.18,2.18,0,0,1-.52-1.36,2.21,2.21,0,0,1,.46-1.39,2.4,2.4,0,0,1,.39-.39,3.22,3.22,0,0,1,3.88-.08A22.36,22.36,0,0,0,56,78.32a14.86,14.86,0,0,0,5.47,1A16.18,16.18,0,0,0,67,78.22,25.39,25.39,0,0,0,72.75,75a3.24,3.24,0,0,1,3.89.18,3,3,0,0,1,.37.41,2.22,2.22,0,0,1,.42,1.4,2.33,2.33,0,0,1-.58,1.35,2.29,2.29,0,0,1-.43.38,30.59,30.59,0,0,1-7.33,4,22.28,22.28,0,0,1-7.53,1.43A21.22,21.22,0,0,1,54,82.87a27.78,27.78,0,0,1-7.41-4.16l0,0ZM94.29,34.4H28.57A10.26,10.26,0,0,0,18.35,44.63V83.18A10.26,10.26,0,0,0,28.57,93.41h3.17a2.61,2.61,0,0,1,2.41,2.77l-1,14.58L52.45,94.15a2.56,2.56,0,0,1,1.83-.75h40a10.26,10.26,0,0,0,10.22-10.23V44.62A10.24,10.24,0,0,0,94.29,34.4Z"/></svg>`,
 
-  // Color scheme
-  PRIMARY_COLOR: "#3b82f6",
-  PRIMARY_COLOR_HOVER: "#2563eb",
-  PRIMARY_COLOR_LIGHT: "#dbeafe",
+  // Color scheme - Dental/Healthcare theme
+  PRIMARY_COLOR: "#10b981", // Emerald green - associated with health and nature
+  PRIMARY_COLOR_HOVER: "#059669",
+  PRIMARY_COLOR_LIGHT: "#d1fae5",
 
-  // Background colors
+  // Background colors - Clean medical theme
   CONTAINER_BG: "#ffffff",
-  MESSAGES_BG: "#f8fafc",
-  INPUT_BG: "#f8fafc",
+  MESSAGES_BG: "#f0fdf4", // Very light green tint
+  INPUT_BG: "#f0fdf4",
   INPUT_BG_FOCUS: "#ffffff",
 
-  // Text colors
-  PRIMARY_TEXT: "#1e293b",
-  SECONDARY_TEXT: "#64748b",
+  // Text colors - Professional medical theme
+  PRIMARY_TEXT: "#064e3b", // Dark green for better contrast
+  SECONDARY_TEXT: "#6b7280",
   WHITE_TEXT: "#ffffff",
 
   // Border colors
-  BORDER_COLOR: "#e2e8f0",
-  BORDER_COLOR_FOCUS: "#3b82f6",
+  BORDER_COLOR: "#d1d5db",
+  BORDER_COLOR_FOCUS: "#10b981",
 
-  // Shadow colors
+  // Shadow colors - Green theme
   SHADOW_COLOR: "rgba(0,0,0,0.12)",
   SHADOW_COLOR_LIGHT: "rgba(0,0,0,0.08)",
   SHADOW_COLOR_MEDIUM: "rgba(0,0,0,0.06)",
-  PRIMARY_SHADOW: "rgba(59, 130, 246, 0.3)",
-  PRIMARY_SHADOW_HOVER: "rgba(59, 130, 246, 0.4)",
-  PRIMARY_SHADOW_FOCUS: "rgba(59, 130, 246, 0.1)",
+  PRIMARY_SHADOW: "rgba(16, 185, 129, 0.3)",
+  PRIMARY_SHADOW_HOVER: "rgba(16, 185, 129, 0.4)",
+  PRIMARY_SHADOW_FOCUS: "rgba(16, 185, 129, 0.1)",
 
   // Typing indicator colors
-  TYPING_DOT_COLOR: "#cbd5e1",
+  TYPING_DOT_COLOR: "#a7f3d0",
 
   // Dimensions
   CONTAINER_WIDTH: "350px",
@@ -287,10 +287,10 @@ const loadUI = () => {
   welcomeMsg.style.boxShadow = `0 2px 8px ${constants.SHADOW_COLOR_MEDIUM}`;
   welcomeMsg.style.border = `1px solid ${constants.BORDER_COLOR}`;
   welcomeMsg.innerHTML = `
-    <div style="display: flex; align-items: center; gap: ${constants.MARGIN_SMALL}; margin-bottom: ${constants.MARGIN_SMALL};">
-      <div style="width: 32px; height: 32px; background: ${constants.PRIMARY_COLOR}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: ${constants.FONT_SIZE_MEDIUM};">👋</div>
-      <div style="font-weight: 600; color: ${constants.PRIMARY_TEXT};">Hi there!</div>
-    </div>
+      <div style="display: flex; align-items: center; gap: ${constants.MARGIN_SMALL}; margin-bottom: ${constants.MARGIN_SMALL};">
+        <div style="width: 32px; height: 32px; background: ${constants.PRIMARY_COLOR}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: ${constants.FONT_SIZE_MEDIUM};">🦷</div>
+        <div style="font-weight: 600; color: ${constants.PRIMARY_TEXT};">Welcome to BrightSmile!</div>
+      </div>
     <div style="color: ${constants.SECONDARY_TEXT}; line-height: 1.6;">${constants.WELCOME_MESSAGE}</div>
   `;
   messages.appendChild(welcomeMsg);
