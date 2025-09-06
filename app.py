@@ -14,6 +14,10 @@ from supabase import create_client
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage, AIMessage, SystemMessage
 
+
+from fastapi.staticfiles import StaticFiles
+
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
 
@@ -92,12 +96,14 @@ BOOKING REQUIREMENTS:
 Remember: You're having a natural conversation, not filling out a form. Make the patient feel comfortable and heard.
 """
 
-@app.get("/", response_class=HTMLResponse)
-async def serve_ui():
-    html_path = Path("public/index.html")
-    if not html_path.exists():
-        return HTMLResponse("<h1>BrightSmile Dental Chatbot</h1><p>UI not found.</p>")
-    return html_path.read_text(encoding="utf-8")
+app.mount("/static", StaticFiles(directory="public"), name="static")
+
+# @app.get("/", response_class=HTMLResponse)
+# async def serve_ui():
+#     html_path = Path("public/header-tag.js")
+#     if not html_path.exists():
+#         return HTMLResponse("<h1>BrightSmile Dental Chatbot</h1><p>UI not found.</p>")
+#     return html_path.read_text(encoding="utf-8")
 
 def get_conversation_state(user_id: str) -> Dict[str, Any]:
     """Retrieve or initialize conversation state for a user."""
