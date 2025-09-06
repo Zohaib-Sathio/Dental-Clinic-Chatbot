@@ -1,36 +1,24 @@
-// Global conversation history and storage
-let conversationHistory = []; // Simple array of messages
-let isMessageBeingSent = false; // Track if a message is currently being sent
+let conversationHistory = [];
+let isMessageBeingSent = false;
+let userId;
 
-// Load conversation history from localStorage on page load
-function loadConversationHistory() {
-  try {
-    const saved = localStorage.getItem("franscent_chat_history");
-    if (saved) {
-      const data = JSON.parse(saved);
-      conversationHistory = data.messages || [];
-    } else {
-      // Initialize with empty array
-      conversationHistory = [];
-    }
-  } catch (error) {
-    console.error("Error loading conversation history:", error);
-    // Initialize with empty array if loading fails
-    conversationHistory = [];
-  }
-}
+const generateUserId = () => {
+  return crypto.randomUUID
+    ? crypto.randomUUID()
+    : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0,
+          v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+};
 
-// Save conversation history to localStorage
-function saveConversationHistory() {
-  try {
-    const data = {
-      messages: conversationHistory,
-    };
-    localStorage.setItem("franscent_chat_history", JSON.stringify(data));
-  } catch (error) {
-    console.error("Error saving conversation history:", error);
-  }
-}
+const loadConversationHistory = (user_id) => {
+  conversationHistory = [];
+};
+
+const saveConversationHistory = () => {
+  // TODO: Implement later
+};
 
 // Start a new chat
 function startNewChat() {
@@ -63,10 +51,10 @@ function startNewChat() {
 
 const constants = {
   // Text content
-  HEADER_TEXT: "Franscent Chatbot",
-  HEADER_SUBTEXT: "Ask me anything!",
+  HEADER_TEXT: "BrightSmile Dental Clinic",
+  HEADER_SUBTEXT: "Your dental care assistant",
   WELCOME_MESSAGE:
-    "Hello there! How can I assist you today? Feel free to ask any questions about our products or services.",
+    "Hello! Welcome to BrightSmile Dental Clinic. I'm here to help you with appointment scheduling, dental care questions, and information about our services. How can I assist you today?",
   INPUT_PLACEHOLDER: "Type your message here...",
   SEND_BUTTON_TEXT: "Send",
   SEND_BUTTON_ICON: "💬",
@@ -585,11 +573,6 @@ function sendMessage(input, messages) {
     timestamp: Date.now(),
   });
 
-  // Keep only last 20 messages to prevent memory issues
-  if (conversationHistory.length > 20) {
-    conversationHistory = conversationHistory.slice(-20);
-  }
-
   // Auto-scroll to bottom
   messages.scrollTop = messages.scrollHeight;
 
@@ -619,13 +602,11 @@ function enableInput(input) {
 
 async function callChatbotAPI(userMessage, messages, input) {
   try {
-    
-
-    const response = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId, message: text })
-        });
+    const response = await fetch(constants.API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId, message: userMessage }),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -698,8 +679,6 @@ function showTypingIndicator(messages) {
   typing.appendChild(avatar);
   typing.appendChild(dots);
   messages.appendChild(typing);
-
-  
 
   // Add typing animation CSS
   if (!document.getElementById("typing-animation")) {
@@ -826,11 +805,8 @@ function parseMarkdown(text) {
     if (window.bitsChatWidgetLoaded) return;
     window.bitsChatWidgetLoaded = true;
     console.log("header-tag.js loaded");
-
-    // Load conversation history first
-    loadConversationHistory();
-
-    // Then load the UI
+    userId = generateUserId();
+    loadConversationHistory(userId);
     loadUI();
   });
 })();
