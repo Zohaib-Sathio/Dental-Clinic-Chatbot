@@ -6,7 +6,7 @@ from typing import Optional, Dict, Any
 import logging, sys, os, json
 from pathlib import Path
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, date
 
 import re
 
@@ -47,7 +47,10 @@ class ChatResponse(BaseModel):
     booking_signal: Optional[Dict[str, Any]] = None
     conversation_state: Optional[Dict[str, Any]] = None
 
-SYSTEM_PROMPT = """
+today = date.today()
+print(today)
+
+SYSTEM_PROMPT = f"""
 You are Sarah, a friendly and professional customer service representative for BrightSmile Dental Clinic. You have years of experience helping patients with their dental care needs.
 
 CLINIC INFORMATION:
@@ -68,7 +71,7 @@ CONVERSATION GUIDELINES:
 3. For appointment bookings, gather information naturally through conversation:
    - Patient's name and contact information (phone/email)
    - Preferred service (check-up, cleaning, etc.)
-   - Preferred date and time
+   - Preferred date and time. Today is {today}
    - Any specific concerns or requirements
    - Confirm all details before finalizing
 
@@ -158,6 +161,8 @@ def extract_booking_info(response_text: str, current_state: Dict[str, Any]) -> t
     Current state: {json.dumps(current_state, indent=2)}
     
     Response text: "{response_text}"
+
+    and today's date is: {today}
     
     Extract any NEW information mentioned about:
     - Patient name, phone, email
@@ -292,6 +297,16 @@ Use this context to provide personalized, continuous service. Remember details f
         
         # Extract and update booking information
         updated_state, booking_signal = extract_booking_info(reply_text, conversation_state)
+
+        if "BOOKING_CONFIRMED" in reply_text:
+            print(reply_text)
+            splitted = reply_text.split("BOOKING_CONFIRMED")
+            initial_response = splitted[0]
+            temp = splitted[1]
+            print(initial_response)
+            second_repsonse = temp.split("```")[-1]
+            print(second_repsonse)
+            reply_text = initial_response.strip() + "\n" + second_repsonse.strip()
         
         # Update conversation state
         update_conversation_state(request.user_id, updated_state)

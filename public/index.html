@@ -3,39 +3,171 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BrightSmile Dental Chatbot</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Franscent Chatbot Widget</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    #chat-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 99999;
+    }
+    
+    #chat-icon-button {
+      width: 60px;
+      height: 60px;
+      background: #0066cc;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: white;
+      font-size: 24px;
+    }
+    
+    #chat-container {
+      width: 300px;
+      height: 400px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      display: none;
+      flex-direction: column;
+    }
+    
+    .chat-header {
+      background: #0066cc;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .close-button {
+      cursor: pointer;
+      font-size: 18px;
+    }
+    
+    #chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+    
+    .user-message {
+      text-align: right;
+      margin: 5px 0;
+    }
+    
+    .user-bubble {
+      display: inline-block;
+      background: #0066cc;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    
+    .bot-message {
+      text-align: left;
+      margin: 5px 0;
+    }
+    
+    .bot-bubble {
+      display: inline-block;
+      background: white;
+      color: black;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    
+    .input-area {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+    }
+    
+    #user-input {
+      flex: 1;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 8px;
+      margin-right: 8px;
+    }
+    
+    #send-btn {
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    
+    .typing-indicator {
+      text-align: left;
+      margin: 5px 0;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div class="w-full max-w-md bg-white shadow-lg rounded-2xl flex flex-col h-[90vh]">
-    <!-- Header -->
-    <div class="bg-blue-600 text-white p-4 rounded-t-2xl">
-      <h1 class="text-lg font-bold">BrightSmile Dental Clinic</h1>
-      <p class="text-sm opacity-90">Ask me anything about our services</p>
-    </div>
+<body>
+  <!-- Chat Widget -->
+  <div id="chat-widget">
+    <!-- Floating Icon Button -->
+    <div id="chat-icon-button">💬</div>
 
-    <!-- Chat Window -->
-    <div id="chat-window" class="flex-1 p-4 overflow-y-auto space-y-2">
-      <!-- Messages will appear here -->
-    </div>
+    <!-- Chat Container -->
+    <div id="chat-container">
+      <!-- Header -->
+      <div class="chat-header">
+        <span>Franscent Chat</span>
+        <span class="close-button">×</span>
+      </div>
 
-    <!-- Input -->
-    <div class="p-4 border-t flex space-x-2">
-      <input id="user-input" type="text" placeholder="Type your message..." 
-             class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <button id="send-btn" 
-              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-        Send
-      </button>
+      <!-- Messages Area -->
+      <div id="chat-messages">
+        <div class="bot-message">
+          <div class="bot-bubble">Hi! How can I help you today?</div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <input id="user-input" type="text" placeholder="Type your message..." />
+        <button id="send-btn">Send</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const chatWindow = document.getElementById("chat-window");
+    // Global state
+    let isMessageBeingSent = false;
+
+    // DOM elements
+    const iconButton = document.getElementById("chat-icon-button");
+    const chatContainer = document.getElementById("chat-container");
+    const chatMessages = document.getElementById("chat-messages");
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
+    const closeButton = document.querySelector(".close-button");
 
-    // Generate or retrieve session-based UUID
+    // Generate session UUID
     let userId = sessionStorage.getItem("userId");
     if (!userId) {
       userId = (crypto.randomUUID ? crypto.randomUUID() : 
@@ -47,45 +179,81 @@
       sessionStorage.setItem("userId", userId);
     }
 
-    console.log("Session User ID:", userId);
+    // API endpoint
+    const API_URL = "/chat";
+
+    // Event listeners
+    iconButton.addEventListener("click", () => {
+      iconButton.style.display = "none";
+      chatContainer.style.display = "flex";
+    });
+
+    closeButton.addEventListener("click", () => {
+      chatContainer.style.display = "none";
+      iconButton.style.display = "flex";
+    });
+
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") sendMessage();
+    });
 
     function addMessage(role, text) {
       const msg = document.createElement("div");
-      msg.className = role === "user" ? "text-right" : "text-left";
-      msg.innerHTML = `
-        <div class="inline-block px-3 py-2 rounded-lg ${role === "user" 
-          ? "bg-blue-600 text-white" 
-          : "bg-gray-200 text-gray-800"}">
-          ${text}
-        </div>`;
-      chatWindow.appendChild(msg);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
+      msg.className = role === "user" ? "user-message" : "bot-message";
+      msg.innerHTML = `<div class="${role === "user" ? "user-bubble" : "bot-bubble"}">${text}</div>`;
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     async function sendMessage() {
       const text = userInput.value.trim();
-      if (!text) return;
+      if (!text || isMessageBeingSent) return;
+
+      isMessageBeingSent = true;
+      userInput.disabled = true;
+      sendBtn.disabled = true;
 
       addMessage("user", text);
       userInput.value = "";
 
+      // Show typing
+      showTyping();
+
       try {
-        const res = await fetch("/chat", {
+        const res = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: userId, message: text })
         });
+        
         const data = await res.json();
+        removeTyping();
         addMessage("assistant", data.reply);
-      } catch (err) {
-        addMessage("assistant", "⚠️ Error: could not reach server.");
+        
+      } catch (error) {
+        removeTyping();
+        addMessage("assistant", "Sorry, something went wrong. Please try again.");
+      } finally {
+        isMessageBeingSent = false;
+        userInput.disabled = false;
+        sendBtn.disabled = false;
       }
     }
 
-    sendBtn.addEventListener("click", sendMessage);
-    userInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") sendMessage();
-    });
+    function showTyping() {
+      const typing = document.createElement("div");
+      typing.id = "typing-indicator";
+      typing.className = "typing-indicator";
+      typing.textContent = "Typing...";
+      chatMessages.appendChild(typing);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTyping() {
+      const typing = document.getElementById("typing-indicator");
+      if (typing) typing.remove();
+    }
   </script>
 </body>
 </html>
