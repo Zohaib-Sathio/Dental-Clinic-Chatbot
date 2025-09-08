@@ -602,7 +602,7 @@ function enableInput(input) {
 
 async function callChatbotAPI(userMessage, messages, input) {
   try {
-    const response = await fetch(document.location.origin + constants.API_URL, {
+    const response = await fetch("https://chatbot.dental.srv580629.hstgr.cloud" + constants.API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id: userId, message: userMessage }),
